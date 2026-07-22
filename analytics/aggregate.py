@@ -1,8 +1,3 @@
-"""Stage 6: deterministic analytics. Pure Python — NO LLM imports allowed
-in this module or package. This separation is load-bearing: every number
-here is computed, never generated.
-"""
-
 from collections import Counter
 
 from schemas.response import AnalyticsResult, RankedCount
