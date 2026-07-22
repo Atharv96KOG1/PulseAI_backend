@@ -1,5 +1,3 @@
-"""Pydantic models for the /analyze API response payload."""
-
 from pydantic import BaseModel
 
 from schemas.ticket import TicketClassification
