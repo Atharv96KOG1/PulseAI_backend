@@ -1,6 +1,3 @@
-"""Shared error codes and exception types used across the pipeline and API."""
-
-
 class ErrorCode:
     MISSING_FEEDBACK_COLUMN = 4001
     EMPTY_CSV = 4002
