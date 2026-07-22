@@ -1,5 +1,3 @@
-"""Runtime configuration loaded from environment variables. No secrets in code."""
-
 import os
 
 from dotenv import load_dotenv
