@@ -1,11 +1,3 @@
-"""Stage 4 (long-ticket routing) and Stage 7 (executive summary).
-
-Both are narration over facts: the long-ticket summarizer must preserve
-every distinct issue rather than abstracting to one topic, and the
-executive summary must only narrate Python-computed numbers, never invent
-or recompute one.
-"""
-
 import json
 import logging
 
