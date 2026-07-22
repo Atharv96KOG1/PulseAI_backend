@@ -1,10 +1,3 @@
-"""Stage 2 (normalization) and Stage 3 (PII redaction).
-
-Normalization always runs before redaction, and redaction always runs
-before any text reaches the LLM (golden rule: never send un-redacted text
-to the model).
-"""
-
 import html
 import re
 import unicodedata
