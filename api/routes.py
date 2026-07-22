@@ -1,7 +1,3 @@
-"""The single stateless /analyze endpoint. Orchestrates the pipeline stages;
-contains no business logic of its own.
-"""
-
 import io
 import logging
 
