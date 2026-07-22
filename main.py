@@ -1,7 +1,3 @@
-"""FastAPI app entrypoint: CORS, request timing at the boundary, and the
-/analyze router. No pipeline logic lives here.
-"""
-
 import logging
 import time
 
