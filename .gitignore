@@ -1,9 +1,0 @@
-.env
-__pycache__/
-*.pyc
-.venv/
-venv/
-.ruff_cache/
-*.egg-info/
-.pytest_cache/
-.DS_Store
