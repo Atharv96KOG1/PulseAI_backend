@@ -1,15 +1,3 @@
-"""Demo CLI: run the full pipeline end-to-end and print a polished report.
-
-Verifies the pipeline spine (validate -> classify -> analytics -> summary)
-without needing the FastAPI layer running, and doubles as a demo script —
-run it against the bundled sample tickets, or point it at a real CSV.
-
-Usage:
-    python cli.py                  # runs the 10 bundled sample tickets
-    python cli.py --csv path.csv   # runs a real CSV through the same pipeline
-    python cli.py --limit 5        # caps the sample tickets to the first N
-"""
-
 import argparse
 import asyncio
 
