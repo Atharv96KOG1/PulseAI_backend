@@ -1,6 +1,8 @@
+"""Pydantic models for the /analyze API response payload."""
+
 from pydantic import BaseModel
 
-from schemas.ticket import TicketClassification
+from loom.schemas.ticket import TicketClassification
 
 
 class ValidationReport(BaseModel):
@@ -35,6 +37,7 @@ class AnalyticsResult(BaseModel):
 
 
 class AnalyzeResponse(BaseModel):
+    analysis_id: str
     validation_report: ValidationReport
     items: list[TicketClassification]
     analytics: AnalyticsResult

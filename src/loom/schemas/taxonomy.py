@@ -1,3 +1,11 @@
+"""Canonical classification taxonomy for Loom.
+
+This module is the SINGLE source of truth for category, theme, sentiment,
+and urgency values. Prompts, Pydantic schemas, and analytics all derive
+their vocabulary from here. Never hardcode a category/theme string anywhere
+else in the codebase.
+"""
+
 from enum import Enum
 
 

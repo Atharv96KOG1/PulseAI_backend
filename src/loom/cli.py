@@ -1,3 +1,15 @@
+"""Demo CLI: run the full pipeline end-to-end and print a polished report.
+
+Verifies the pipeline spine (validate -> classify -> analytics -> summary)
+without needing the FastAPI layer running, and doubles as a demo script —
+run it against the bundled sample tickets, or point it at a real CSV.
+
+Usage:
+    python cli.py                  # runs the 10 bundled sample tickets
+    python cli.py --csv path.csv   # runs a real CSV through the same pipeline
+    python cli.py --limit 5        # caps the sample tickets to the first N
+"""
+
 import argparse
 import asyncio
 
@@ -7,15 +19,15 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-import config
-from analytics.aggregate import compute_analytics
-from pipeline.classify import classify_all
-from pipeline.summarize import build_summary_facts, generate_executive_summary
-from pipeline.validate import RowRecord, validate_csv
-from schemas.response import AnalyticsResult, ValidationReport
-from schemas.ticket import TicketClassification
-from utils.errors import FileValidationError
-from utils.text import word_count
+from loom import config
+from loom.analytics.aggregate import compute_analytics
+from loom.pipeline.classify import classify_all
+from loom.pipeline.summarize import build_summary_facts, generate_executive_summary
+from loom.pipeline.validate import RowRecord, validate_csv
+from loom.schemas.response import AnalyticsResult, ValidationReport
+from loom.schemas.ticket import TicketClassification
+from loom.utils.errors import FileValidationError
+from loom.utils.text import word_count
 
 console = Console()
 

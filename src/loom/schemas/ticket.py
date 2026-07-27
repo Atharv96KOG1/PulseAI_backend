@@ -1,6 +1,13 @@
+"""Pydantic models for per-ticket classification.
+
+`LLMClassification` is the exact shape requested from the model (a pure
+enumeration block, no `ticket_id` — the backend assigns that). `TicketClassification`
+extends it with the backend-assigned `ticket_id` and is what the API returns.
+"""
+
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from schemas.taxonomy import CATEGORY_THEMES, Category, Sentiment, Theme, Urgency
+from loom.schemas.taxonomy import CATEGORY_THEMES, Category, Sentiment, Theme, Urgency
 
 
 class AdditionalIssue(BaseModel):
@@ -22,8 +29,10 @@ class AdditionalIssue(BaseModel):
 class LLMClassification(BaseModel):
     """The exact schema the model is asked to produce.
 
-    `sentiment_score` must stay sign-consistent with `sentiment` (enforced
-    below) so the two never contradict each other on the dashboard.
+    `sentiment_score` is a numeric field by explicit product decision, overriding
+    the "no continuous sentiment score" rule in CLAUDE.md/Loom_Source_of_Truth.md.
+    It must stay sign-consistent with `sentiment` (enforced below) so the two
+    never contradict each other on the dashboard.
     """
 
     model_config = ConfigDict(extra="forbid")

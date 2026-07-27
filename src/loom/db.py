@@ -61,9 +61,13 @@ def init_db() -> None:
         conn.executescript(SCHEMA)
 
 
-def save_analysis(validation_report, items, analytics, summary) -> str:
+def save_analysis(validation_report, items, analytics, summary) -> tuple[str, list[str]]:
+    """Persist an analysis run. Returns (analysis_id, ticket_row_ids) — the row ids
+    are aligned with `items` order and are the keys embeddings attach to.
+    """
     analysis_id = str(uuid.uuid4())
     created_at = datetime.now(UTC).isoformat()
+    ticket_row_ids = []
 
     with get_db_connection() as conn:
         conn.execute(
@@ -87,6 +91,7 @@ def save_analysis(validation_report, items, analytics, summary) -> str:
 
         for item in items:
             ticket_row_id = str(uuid.uuid4())
+            ticket_row_ids.append(ticket_row_id)
             conn.execute(
                 """
                 INSERT INTO ticket (
@@ -124,7 +129,34 @@ def save_analysis(validation_report, items, analytics, summary) -> str:
                     ),
                 )
 
-    return analysis_id
+    return analysis_id, ticket_row_ids
+
+
+def get_analysis_facts(analysis_id: str) -> dict | None:
+    """Lightweight fetch of an analysis's aggregate facts only (no ticket rows).
+    Grounds RAG answers in the full dashboard analytics, not just the
+    semantically retrieved excerpts, without the cost of joining every ticket.
+    """
+    with get_db_connection() as conn:
+        row = conn.execute(
+            """
+            SELECT created_at, total_rows, processed, skipped, summary, analytics
+            FROM analysis WHERE id = ?
+            """,
+            (analysis_id,),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    return {
+        "created_at": row["created_at"],
+        "total_rows": row["total_rows"],
+        "processed": row["processed"],
+        "skipped": row["skipped"],
+        "summary": row["summary"],
+        "analytics": json.loads(row["analytics"]),
+    }
 
 
 def get_analysis(analysis_id: str) -> dict | None:
@@ -144,7 +176,7 @@ def get_analysis(analysis_id: str) -> dict | None:
             tickets.append({**dict(ticket_row), "additional_issues": [dict(r) for r in issue_rows]})
 
         return {
-            "id": analysis_row["id"],
+            "analysis_id": analysis_row["id"],
             "created_at": analysis_row["created_at"],
             "validation_report": {
                 "total_rows": analysis_row["total_rows"],
