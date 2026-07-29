@@ -111,9 +111,9 @@ async def _safe_process(row: RowRecord) -> TicketClassification:
 
 
 async def classify_all(rows: list[RowRecord]) -> list[TicketClassification]:
-    """Process rows in batches of BATCH_SIZE, bounding in-flight concurrency
-    to MAX_CONCURRENCY. One ticket's failure never affects another (batch
-    independence is enforced inside `_safe_process`, which never raises).
+    """Process all rows with in-flight concurrency bounded to MAX_CONCURRENCY.
+    One ticket's failure never affects another (independence is enforced
+    inside `_safe_process`, which never raises).
     """
     semaphore = asyncio.Semaphore(config.MAX_CONCURRENCY)
 
@@ -121,9 +121,4 @@ async def classify_all(rows: list[RowRecord]) -> list[TicketClassification]:
         async with semaphore:
             return await _safe_process(row)
 
-    results: list[TicketClassification] = []
-    for i in range(0, len(rows), config.BATCH_SIZE):
-        batch = rows[i : i + config.BATCH_SIZE]
-        batch_results = await asyncio.gather(*[_bounded(row) for row in batch])
-        results.extend(batch_results)
-    return results
+    return await asyncio.gather(*[_bounded(row) for row in rows])

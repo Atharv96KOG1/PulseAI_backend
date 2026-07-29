@@ -92,3 +92,21 @@ def fallback_classification(ticket_id: str, feedback_text: str = "") -> TicketCl
         actionable=False,
         additional_issues=[],
     )
+
+
+def is_unclassifiable(item: TicketClassification) -> bool:
+    """True when `item` carries the fallback shape — either the model flagged the
+    ticket as out-of-scope (non-English/spam/unintelligible) or the repair contract
+    was exhausted after a real classification failure. Both cases carry no real
+    signal about the ticket, so callers exclude them from analytics/results.
+    """
+    reference = fallback_classification(item.ticket_id, item.feedback_text)
+    return (
+        item.primary_category == reference.primary_category
+        and item.primary_theme == reference.primary_theme
+        and item.sentiment == reference.sentiment
+        and item.sentiment_score == reference.sentiment_score
+        and item.urgency == reference.urgency
+        and item.actionable == reference.actionable
+        and item.additional_issues == reference.additional_issues
+    )

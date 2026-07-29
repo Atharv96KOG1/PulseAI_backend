@@ -20,6 +20,7 @@ from loom.rag.vector_store import save_ticket_embeddings
 from loom.reports.pdf_report import build_weekly_report_pdf
 from loom.schemas.rag import QueryRequest, QueryResponse
 from loom.schemas.response import AnalyzeResponse, ValidationReport
+from loom.schemas.ticket import is_unclassifiable
 from loom.services.embeddings_client import embed_texts
 from loom.services.llm_client import AuthLLMError, TransientLLMError
 from loom.utils.errors import ErrorCode, FileValidationError
@@ -81,6 +82,8 @@ async def analyze(
         raise HTTPException(status_code=400, detail={"code": exc.code, "message": exc.message}) from exc
 
     items = await classify_all(validation.rows)
+    out_of_scope_count = sum(1 for item in items if is_unclassifiable(item))
+
     analytics = compute_analytics(items, total_uploaded=validation.total_rows, skipped=validation.skipped)
 
     validation_report = ValidationReport(
@@ -90,7 +93,7 @@ async def analyze(
         skip_reasons=validation.skip_reasons,
     )
 
-    facts = build_summary_facts(analytics, validation_report)
+    facts = build_summary_facts(analytics, validation_report, out_of_scope_count=out_of_scope_count)
     summary = await generate_executive_summary(facts)
 
     analysis_id, ticket_row_ids = save_analysis(validation_report, items, analytics, summary)

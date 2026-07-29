@@ -35,7 +35,9 @@ class AuthLLMError(Exception):
 
 @lru_cache(maxsize=1)
 def _client() -> AsyncOpenAI:
-    return AsyncOpenAI(api_key=config.API_KEY)
+    # max_retries=0: with_backoff() below already retries transient failures;
+    # the SDK's own default retries would otherwise stack underneath it.
+    return AsyncOpenAI(api_key=config.API_KEY, max_retries=0)
 
 
 def build_strict_json_schema(model: type[BaseModel]) -> dict[str, Any]:

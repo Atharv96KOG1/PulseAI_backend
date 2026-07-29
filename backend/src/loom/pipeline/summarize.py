@@ -38,9 +38,19 @@ async def summarize_long_ticket(redacted_text: str) -> str:
         return redacted_text
 
 
-def build_summary_facts(analytics: AnalyticsResult, validation_report: ValidationReport) -> dict:
+def build_summary_facts(
+    analytics: AnalyticsResult, validation_report: ValidationReport, out_of_scope_count: int = 0
+) -> dict:
     """Assemble the Python-computed aggregate facts handed to the executive
     summary prompt. The narration model may only reference these values.
+
+    `out_of_scope_count` is how many processed items came back with the
+    fallback shape (Category "Other" / Theme "Unclear") — either the ticket
+    text wasn't real product feedback (a stray question, spam, gibberish) or
+    classification failed after every repair attempt. They still count as
+    processed and still appear in every distribution above; this count only
+    tells the narration model to name them explicitly instead of describing
+    them like ordinary low-urgency feedback.
     """
     top_category = analytics.top_categories[0].name if analytics.top_categories else "N/A"
     top_theme = analytics.top_themes[0].name if analytics.top_themes else "N/A"
@@ -48,6 +58,7 @@ def build_summary_facts(analytics: AnalyticsResult, validation_report: Validatio
         "total_uploaded": validation_report.total_rows,
         "total_processed": analytics.total_processed,
         "total_skipped": analytics.total_skipped,
+        "out_of_scope_count": out_of_scope_count,
         "processing_success_rate_pct": analytics.processing_success_rate,
         "category_distribution": analytics.category_distribution,
         "sentiment_distribution": analytics.sentiment_distribution,
@@ -79,6 +90,13 @@ def _fallback_summary(facts: dict) -> str:
         f"(average sentiment score {facts['average_sentiment_score']:+.2f}). "
         f"{facts['high_urgency_count']} tickets were flagged High urgency, and "
         f"{facts['actionable_count']} were marked actionable."
+        + (
+            f" {facts['out_of_scope_count']} submission(s) were out of scope — unrelated to the "
+            "product (e.g. general questions, spam, or unintelligible text) rather than actionable "
+            "feedback."
+            if facts["out_of_scope_count"]
+            else ""
+        )
     )
 
 

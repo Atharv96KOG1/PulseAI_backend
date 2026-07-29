@@ -25,7 +25,7 @@ from loom.pipeline.classify import classify_all
 from loom.pipeline.summarize import build_summary_facts, generate_executive_summary
 from loom.pipeline.validate import RowRecord, validate_csv
 from loom.schemas.response import AnalyticsResult, ValidationReport
-from loom.schemas.ticket import TicketClassification
+from loom.schemas.ticket import TicketClassification, is_unclassifiable
 from loom.utils.errors import FileValidationError
 from loom.utils.text import word_count
 
@@ -177,6 +177,7 @@ async def run(csv_path: str | None, limit: int | None) -> None:
 
     with console.status(f"[bold blue]Classifying {len(rows)} tickets against '{config.LLM_MODEL}'..."):
         items = await classify_all(rows)
+    out_of_scope_count = sum(1 for item in items if is_unclassifiable(item))
 
     validation_report = ValidationReport(
         total_rows=total_uploaded,
@@ -187,7 +188,7 @@ async def run(csv_path: str | None, limit: int | None) -> None:
     analytics = compute_analytics(items, total_uploaded=total_uploaded, skipped=skipped)
 
     with console.status("[bold blue]Generating executive summary..."):
-        facts = build_summary_facts(analytics, validation_report)
+        facts = build_summary_facts(analytics, validation_report, out_of_scope_count=out_of_scope_count)
         summary = await generate_executive_summary(facts)
 
     console.print()

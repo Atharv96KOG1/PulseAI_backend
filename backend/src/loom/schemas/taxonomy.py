@@ -34,6 +34,7 @@ class Theme(str, Enum):
     OTP_2FA_PROBLEM = "OTP/2FA Problem"
     ACCOUNT_LOCKED = "Account Locked"
     PROFILE_SETTINGS_ISSUE = "Profile Settings Issue"
+    UNAUTHORIZED_ACCESS = "Unauthorized Access"
 
     # Performance & Reliability
     APP_CRASH = "App Crash"
@@ -100,6 +101,7 @@ CATEGORY_THEMES: dict[Category, list[Theme]] = {
         Theme.OTP_2FA_PROBLEM,
         Theme.ACCOUNT_LOCKED,
         Theme.PROFILE_SETTINGS_ISSUE,
+        Theme.UNAUTHORIZED_ACCESS,
     ],
     Category.PERFORMANCE_RELIABILITY: [
         Theme.APP_CRASH,
@@ -144,7 +146,9 @@ CATEGORY_THEMES: dict[Category, list[Theme]] = {
 # so the prompt and this taxonomy can never drift apart.
 CATEGORY_SCOPE: dict[Category, str] = {
     Category.BILLING_PAYMENTS: "Charges, refunds, failed/duplicate payments, invoices, subscription/pricing.",
-    Category.ACCOUNT_ACCESS: "Login, passwords, OTP/2FA, lockouts, profile/permission settings.",
+    Category.ACCOUNT_ACCESS: (
+        "Login, passwords, OTP/2FA, lockouts, profile/permission settings, unauthorized access."
+    ),
     Category.PERFORMANCE_RELIABILITY: (
         "The app fails to run properly: crashes, slowness, freezes, downtime, timeouts."
     ),
