@@ -1,9 +1,3 @@
-"""Chart images for the PDF report. Matplotlib, Agg backend (headless),
-rendered to PNG bytes. Colors and chart semantics mirror the dashboard
-(frontend/src/lib/colors.ts and components/charts/*) so the PDF reads as
-the same visual system, not a separate one.
-"""
-
 import io
 
 import matplotlib

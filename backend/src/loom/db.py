@@ -196,3 +196,34 @@ def list_analyses() -> list[dict]:
             "SELECT id, created_at, total_rows, processed, skipped FROM analysis ORDER BY created_at DESC"
         ).fetchall()
         return [dict(row) for row in rows]
+
+
+def list_analyses_in_range(start_date: str, end_date: str) -> list[dict]:
+    """Fetch every saved analysis whose created_at date falls within
+    [start_date, end_date] inclusive (ISO date strings, e.g. "2026-07-01").
+    Ordered oldest-first so a combined summary reads in chronological order.
+    """
+    with get_db_connection() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, created_at, total_rows, processed, skipped, skip_reasons, summary, analytics
+            FROM analysis
+            WHERE date(created_at) BETWEEN date(?) AND date(?)
+            ORDER BY created_at ASC
+            """,
+            (start_date, end_date),
+        ).fetchall()
+
+    return [
+        {
+            "analysis_id": row["id"],
+            "created_at": row["created_at"],
+            "total_rows": row["total_rows"],
+            "processed": row["processed"],
+            "skipped": row["skipped"],
+            "skip_reasons": json.loads(row["skip_reasons"]),
+            "summary": row["summary"],
+            "analytics": json.loads(row["analytics"]),
+        }
+        for row in rows
+    ]

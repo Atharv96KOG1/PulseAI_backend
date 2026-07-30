@@ -1,0 +1,109 @@
+id,feedback,source,date
+T001,My card was charged twice for the same monthly plan. I only subscribed once and now there are two identical charges on my statement. Please refund the extra one.,Support Ticket,2026-07-01
+T002,Payment keeps failing at checkout. I've tried three different cards and it just says 'transaction could not be completed'. Losing patience here.,In-App,2026-07-01
+T003,requested a refund 12 days ago and still nothing. how long does this actually take??,Email,2026-07-02
+T004,Why am I being charged 499 when the plan clearly said 399 on the pricing page? This feels like a bait and switch.,Web Review,2026-07-02
+T005,My subscription renewed automatically even though I cancelled last week. I have the cancellation email. Want this reversed.,Support Ticket,2026-07-03
+T006,Billing was smooth and the invoice was clear. No complaints on the payment side.,Survey,2026-07-03
+T007,Got charged a renewal fee with zero warning. At least send an email before you take money.,App Store,2026-07-04
+T008,The refund finally came through after I followed up twice. Took a while but resolved.,Email,2026-07-04
+T009,I can't log in. Keeps saying invalid credentials even though I'm 100% sure the password is right. Reset link never arrives either.,Support Ticket,2026-07-05
+T010,Password reset email goes to spam every single time and the link expires in like 2 minutes. Painful.,In-App,2026-07-05
+T011,"The OTP never shows up on my phone. Waited 10 mins, requested 4 times, nothing. Had to give up.",App Store,2026-07-06
+T012,My account got locked after I mistyped my password twice. Twice! That's way too strict.,Web Review,2026-07-06
+T013,"I can't update my display name in profile settings, the save button does nothing.",In-App,2026-07-07
+T014,"Login with Google works perfectly now, thanks for adding that. Much faster than before.",Survey,2026-07-07
+T015,App crashes every time I open the Reports tab. Reproducible 100% of the time on my phone.,App Store,2026-07-08
+T016,Everything is so slow. Pages take 8-10 seconds to load and sometimes just spin forever.,Web Review,2026-07-08
+T017,Your service was down for most of yesterday afternoon. We couldn't process any orders. This cost us real money.,Email,2026-07-09
+T018,Requests keep timing out when I try to export a large dataset. Smaller ones are fine.,Support Ticket,2026-07-09
+T019,The desktop app eats like 4GB of RAM just sitting idle. My laptop fan never stops.,Web Review,2026-07-10
+T020,Honestly the app has gotten way faster after the last update. Snappy now. Nice work.,Survey,2026-07-10
+T021,It froze mid-payment and I wasn't sure if the money went through. Scary experience.,In-App,2026-07-11
+T022,The 'mark as read' button doesn't do anything. I click it and the notification stays unread.,In-App,2026-07-11
+T023,"The dashboard shows my total sales as negative, which is obviously wrong. The math is off somewhere.",Support Ticket,2026-07-12
+T024,The submit button is cut off on the right edge of the form and I can't click it on mobile.,App Store,2026-07-12
+T025,Changes I make on my phone don't show up on the web version. Sync is clearly broken.,Web Review,2026-07-13
+T026,"It won't accept my valid email address, keeps saying 'invalid format' when it's definitely correct.",In-App,2026-07-13
+T027,Export to PDF just produces a blank file. Every time.,Support Ticket,2026-07-14
+T028,Please add a dark mode. My eyes are killing me at night. This is my number one wish.,Survey,2026-07-14
+T029,Would love if the search bar supported filters by date range. Right now I have to scroll forever.,Web Review,2026-07-15
+T030,Any chance of a Slack integration? Would save my team a ton of copy-pasting.,Email,2026-07-15
+T031,The approval process needs fewer clicks. Right now it takes 5 steps to approve one item.,Survey,2026-07-16
+T032,It would be great to have a QuickBooks integration for accounting exports.,Support Ticket,2026-07-16
+T033,I can never find the settings menu. It's buried under three other menus. Very confusing navigation.,App Store,2026-07-17
+T034,"The new layout is cluttered. Too much crammed onto one screen, hard to focus on anything.",Web Review,2026-07-17
+T035,Took me forever to find where to change my notification preferences. Should be more obvious.,Survey,2026-07-18
+T036,The color contrast is too low for me to read comfortably. Please consider accessibility.,Email,2026-07-18
+T037,"Genuinely the cleanest, most intuitive interface I've used in this category. A joy to use.",App Store,2026-07-19
+T038,"Love the onboarding flow, it walked me through everything without being annoying.",Survey,2026-07-19
+T039,Raised a ticket 5 days ago and still no reply. Is anyone even there?,Email,2026-07-20
+T040,The support agent was dismissive and clearly didn't read my message. Frustrating.,Web Review,2026-07-20
+T041,My issue was closed as 'resolved' but it absolutely was not resolved. Reopened twice now.,Support Ticket,2026-07-21
+T042,"There's no phone number, no chat, only a form that never gets answered. Impossible to reach anyone.",Web Review,2026-07-21
+T043,"Shoutout to your support rep Priya, she solved my problem in five minutes and was lovely about it.",Survey,2026-07-21
+T044,Just wanted to say thanks for building this. It's made my week easier.,Survey,2026-07-22
+T045,meh,App Store,2026-07-22
+T046,ok,In-App,2026-07-22
+T047,"idk what to say really, it's a product i guess",Web Review,2026-07-23
+T048,Charged for a plan I downgraded from. The downgrade clearly didn't take effect on billing.,Support Ticket,2026-07-23
+T049,The 2FA codes arrive but by the time I type them they've already expired. Window is too short.,In-App,2026-07-23
+T050,App randomly logs me out several times a day and I have to sign in again. Annoying.,App Store,2026-07-24
+T051,Search results take forever to load even for simple queries. Needs optimizing.,Web Review,2026-07-24
+T052,The calendar widget shows the wrong week. Off by seven days consistently.,Support Ticket,2026-07-24
+T053,Add bulk-edit please. Editing items one by one is soul-crushing when you have hundreds.,Survey,2026-07-25
+T054,The mobile menu icons are tiny and hard to tap accurately. Fat-finger city.,App Store,2026-07-25
+T055,Support took a week but eventually sorted it out. Slow but they got there.,Email,2026-07-25
+T056,Best purchase decision we made this year. The whole team relies on it daily.,Web Review,2026-07-26
+T057,The invoice PDF has last month's date on it even though it's this month's invoice.,Support Ticket,2026-07-26
+T058,After the update the app won't even open. Splash screen then crash. Unusable right now.,App Store,2026-07-26
+T059,"Notifications are duplicated, I get every alert three times. Something's wrong with the logic.",In-App,2026-07-27
+T060,"Would be nice to export reports to Excel, not just CSV.",Survey,2026-07-27
+T061,Can't figure out how to invite a teammate. The button isn't where I'd expect it.,Web Review,2026-07-27
+T062,Agent kept transferring me between departments. Nobody could actually help. Went in circles.,Support Ticket,2026-07-28
+T063,The screen reader skips over half the buttons. As a blind user this makes it nearly unusable.,Email,2026-07-28
+T064,Payment went through fine and I got the receipt instantly. Smooth.,Survey,2026-07-28
+T065,"It keeps rejecting my phone number saying it's invalid, but it's a normal 10-digit number.",In-App,2026-07-29
+T066,The whole platform was unreachable this morning for about an hour. Back now.,Web Review,2026-07-29
+T067,Please let us reorder the columns in the table view. Fixed order doesn't suit our workflow.,Survey,2026-07-29
+T068,I locked myself out again because the lockout threshold is absurdly low. Fix this.,App Store,2026-07-30
+T069,The reset password page just shows a spinner and never loads the form.,Support Ticket,2026-07-30
+T070,Fantastic tool overall. Does exactly what it promises and rarely gets in my way.,Web Review,2026-07-30
+T071,"I can't log in after resetting my password, and when I retry the whole app crashes. Two problems at once.",Support Ticket,2026-07-31
+T072,The app is painfully slow AND I was double charged this month. Not a great combo.,In-App,2026-07-31
+T073,"Support never replied to my ticket, and meanwhile the export feature is still producing blank files.",Email,2026-07-31
+T074,"Love the new design, but the sync between devices is broken and it's driving me nuts.",Web Review,2026-08-01
+T075,"Two things: the OTP never arrives, and even when I get in the dashboard numbers look wrong.",Support Ticket,2026-08-01
+T076,Checkout failed three times and then customer support was completely unresponsive about it.,In-App,2026-08-01
+T077,Please refund my order. My email is rahul.sharma@gmail.com and my phone is 9876543210 if you need to reach me.,Support Ticket,2026-08-02
+T078,My card ending 4242 4242 4242 4242 was charged twice. Contact me at 555-018-2947.,Email,2026-08-02
+T079,Account under priya.n@company.co.in is locked. Reset link isn't arriving to that address.,Support Ticket,2026-08-02
+T080,Reach me on +91 98200 11223 — the app crashes whenever I open my profile.,In-App,2026-08-03
+T081,<p>The <b>checkout page</b> keeps <i>freezing</i> when I click pay.</p><br>Please fix ASAP.,Web Review,2026-08-03
+T082,**Refund still not received.** It's been _three weeks_ now. See order #4471.,Email,2026-08-03
+T083,<div>Login button does <strong>nothing</strong> on Safari.</div>,Support Ticket,2026-08-04
+T084,"## Feature idea
+
+- add recurring reminders
+- and a weekly digest email
+
+Would use both daily.",Survey,2026-08-04
+T085,"Oh fantastic, another crash right when I needed it most. Exactly what I wanted today.",App Store,2026-08-04
+T086,"Wow, only took 6 emails and 2 weeks to get a reply. Truly world-class support.",Web Review,2026-08-05
+T087,"I've been a paying customer for almost two years now and I feel like I need to write a full account of what happened this week because it has genuinely been one frustration after another. It started on Monday when I tried to log in first thing in the morning and the app simply would not accept my password. I was certain it was correct because I use a password manager, so I clicked the reset link. The reset email took nearly forty minutes to arrive, and by the time it did the link had apparently already expired, which makes no sense to me. I requested another one, waited again, and finally managed to get in around lunchtime. Once I was in, I noticed that my dashboard was showing completely wrong numbers. My monthly total was displaying as a negative value, which is obviously impossible given that I only ever add income entries. I took screenshots in case you need them. Then, when I tried to export a report to send to my accountant, the export produced a blank PDF three times in a row. At this point I contacted support through the form on your website because there is no phone number and no live chat that I could find anywhere. That was Monday afternoon. It is now Thursday and I have still not received any response, not even an automated acknowledgement that my ticket was received, which makes me wonder if it went through at all. I understand that bugs happen and that support teams get busy, but the combination of a login problem, incorrect financial data, a broken export, and total silence from support has left me seriously considering whether to renew my subscription next month. I really do like the product when it works, and that is why I am taking the time to write all of this instead of just leaving a one-star review and walking away. Please look into all of these issues and let me know what is going on.",Support Ticket,2026-08-05
+T088,"First off I want to say that the core idea of this product is excellent and when everything is functioning I genuinely enjoy using it, so please take this feedback as coming from someone who wants you to succeed. That said, the performance over the last month has been steadily getting worse and I want to describe it in detail. When I open the application in the morning it now takes somewhere between eight and twelve seconds just to load the main dashboard, whereas a couple of months ago it was almost instant. Once it loads, scrolling through my list of items is choppy and stutters, especially when there are images involved. If I have more than a few tabs of the web version open, my browser starts warning me that the page is slowing everything down, and the desktop app on my laptop keeps my fan running constantly and reports very high memory usage in the task manager, often over four gigabytes which seems excessive for what is essentially a list and some charts. On top of the general sluggishness, larger exports frequently time out entirely, so I have started breaking my reports into smaller chunks as a workaround, which is tedious and adds a good twenty minutes to a task that used to take five. I have tried all of the usual troubleshooting steps that I could think of: clearing the cache repeatedly, fully uninstalling and reinstalling both the mobile and desktop apps, switching between Chrome and Firefox, disabling my browser extensions one by one, restarting my machine, and even testing on a completely different computer at home, and it helps only marginally and only for a little while before the sluggishness creeps back in. I am on a reasonably powerful and recent computer with a fast and stable fibre internet connection, so I really do not think the problem is on my end, and the fact that it has been getting progressively worse over the same period rather than suddenly appearing points to something changing on your side. I would really appreciate it if the engineering team could seriously look into these performance regressions, because it is starting to meaningfully affect my daily workflow and productivity, and I know at least three or four colleagues in my organisation who have independently complained about the exact same gradual slowdown over the exact same time frame, which suggests it is not an isolated case.",Email,2026-08-06
+T089,"I'm writing to give some structured feedback after using the platform intensively for a quarter, and I have a mix of praise and requests. Starting with the positives, the onboarding experience was genuinely delightful; the step-by-step walkthrough was clear without being patronising, and I was productive within about ten minutes of signing up, which is rare for tools in this space. The core reporting features are powerful and I have replaced two other subscriptions with this single product, so overall I am a happy customer. Now for the things I would love to see improved, because I think they would take the product from good to indispensable. First, the search functionality really needs filters; right now searching returns a long undifferentiated list and I cannot narrow by date range, category, or status, so for large accounts like mine it becomes impractical and I end up scrolling endlessly. Second, an integration with Slack would be transformative for my team because we currently copy and paste updates manually several times a day, which is error prone. Third, the approval workflow has too many steps; approving a single item takes five clicks and for someone who approves dozens of items a day that adds up to a lot of wasted time, so a bulk-approve option or a streamlined flow would be hugely appreciated. Fourth, and more minor, it would be lovely to be able to schedule reports to be generated and emailed automatically on a recurring basis, for example every Monday morning, so that I do not have to remember to pull them manually each week. Fifth, an option to reorder or hide columns in the main table view would help enormously, because the fixed column order does not match the priority of information for my particular use case and I find myself scrolling horizontally far too often. None of these are dealbreakers and I want to stress again that I genuinely like the product and consider it good value, but these enhancements would collectively make my daily experience substantially better and would make it much easier for me to wholeheartedly recommend the tool to peers and colleagues in similar roles, which I already do informally whenever the subject comes up in conversation.",Survey,2026-08-06
+T090,App crashes every time I open the Reports tab. Reproducible 100% of the time on my phone.,App Store,2026-08-07
+T091,requested a refund 12 days ago and still nothing. how long does this actually take??,Email,2026-08-07
+T092,The integration with our CRM broke after your last release. Records aren't syncing across anymore.,Support Ticket,2026-08-07
+T093,"Please add multi-language support, a lot of my users aren't comfortable in English.",Survey,2026-08-08
+T094,The font size can't be increased anywhere in settings. Hard for older users to read.,Web Review,2026-08-08
+T095,Chat support was instant and the rep knew exactly what to do. Best support experience in a while.,Survey,2026-08-08
+T096,Every time I hit save it throws a validation error about a required field that's already filled in.,In-App,2026-08-09
+T097,The app drained my battery from 80% to 20% in under an hour running in the background.,App Store,2026-08-09
+T098,I was charged in USD instead of INR and the conversion added a hidden fee. Not okay.,Support Ticket,2026-08-09
+T099,Wish there was a way to schedule reports to send automatically every Monday.,Survey,2026-08-10
+T100,"Simple, reliable, does the job. Nothing flashy but I trust it. Would recommend.",Web Review,2026-08-10
+T101,,In-App,2026-08-10
+T102,   ,Web Review,2026-08-10
+T103,,Survey,2026-08-10

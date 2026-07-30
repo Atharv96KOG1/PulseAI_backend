@@ -1,10 +1,3 @@
-"""Stage 1: file-level and row-level validation.
-
-File-level problems reject the whole upload (FileValidationError). Row-level
-problems skip just that row and are counted, never failing the run. Skipped
-rows are reported separately and never enter analytics.
-"""
-
 from collections import Counter
 from dataclasses import dataclass, field
 

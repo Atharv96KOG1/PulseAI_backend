@@ -1,9 +1,3 @@
-"""Classification prompt template.
-
-The taxonomy block is generated from schemas/taxonomy.py at import time so
-the prompt can never drift from the canonical category/theme lists.
-"""
-
 from loom.schemas.taxonomy import CATEGORY_SCOPE, CATEGORY_THEMES
 
 

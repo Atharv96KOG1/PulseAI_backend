@@ -1,10 +1,3 @@
-"""Stage 5: batch classification.
-
-Implements the exact repair contract: validate -> coerce (free) -> re-prompt
-(one retry) -> fallback. Every ticket leaves this module with a valid
-TicketClassification, success or fallback — never an exception.
-"""
-
 import asyncio
 import logging
 import re

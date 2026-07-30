@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Loom — Project Report</title>
+<style>
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --ink: #0b0b0b;
+    --ink-secondary: #52514e;
+    --ink-muted: #898781;
+    --border: #e1e0d9;
+    --surface: #fcfcfb;
+    --accent: #2a78d6;
+    --accent-dark: #184f95;
+    --good: #0ca30c;
+    --critical: #d03b3b;
+    --warning: #c98500;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", system-ui, Roboto, sans-serif;
+    color: var(--ink);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 18mm 16mm 18mm;
+    position: relative;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  .page-footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 18mm;
+    right: 18mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8pt;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 3mm;
+  }
+
+  h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
+  h2 { font-size: 15pt; margin: 0 0 4mm 0; padding-bottom: 2mm; border-bottom: 2px solid var(--ink); }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm 0; color: var(--accent-dark); }
+  p { margin: 0 0 2.5mm 0; color: var(--ink-secondary); }
+  ul, ol { margin: 0 0 2.5mm 0; padding-left: 5mm; color: var(--ink-secondary); }
+  li { margin-bottom: 1.5mm; }
+  code { font-family: ui-monospace, Consolas, monospace; background: #f0efec; padding: 0.5px 4px; border-radius: 3px; font-size: 9pt; color: var(--ink); }
+  strong { color: var(--ink); }
+
+  .section-label {
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2mm;
+  }
+
+  /* ---------- Cover page ---------- */
+  .cover {
+    background: linear-gradient(160deg, #0d1b2f 0%, #14304f 45%, #2a78d6 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 22mm;
+  }
+  .cover .eyebrow {
+    font-size: 9.5pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #bcd6f5;
+    font-weight: 600;
+  }
+  .cover .title {
+    font-size: 52pt;
+    font-weight: 700;
+    margin: 8mm 0 2mm 0;
+    letter-spacing: -0.02em;
+  }
+  .cover .subtitle {
+    font-size: 14.5pt;
+    color: #e3edf9;
+    max-width: 130mm;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .cover .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3mm;
+    margin-top: 10mm;
+  }
+  .cover .tag {
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 2mm 5mm;
+    font-size: 9pt;
+    color: #fff;
+  }
+  .cover .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255,255,255,0.25);
+    padding-top: 6mm;
+  }
+  .cover .meta-block .label { font-size: 8pt; color: #a9c6ec; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1mm; }
+  .cover .meta-block .value { font-size: 11pt; font-weight: 600; }
+
+  /* ---------- Generic layout helpers ---------- */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 3mm;
+    padding: 4mm;
+    background: var(--surface);
+  }
+  .card h3 { margin-top: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 2.5mm 0 4mm 0; font-size: 9.3pt; }
+  th { text-align: left; background: #f0efec; color: var(--ink-secondary); font-size: 8pt; text-transform: uppercase; letter-spacing: 0.04em; padding: 1.7mm 3mm; border-bottom: 1px solid var(--border); }
+  td { padding: 1.7mm 3mm; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--ink-secondary); }
+  tr:last-child td { border-bottom: none; }
+  td strong { color: var(--ink); }
+
+  .pill { display: inline-block; padding: 0.5mm 2.5mm; border-radius: 20px; font-size: 8pt; font-weight: 600; }
+  .pill.blue { background: #e8f0fb; color: var(--accent-dark); }
+  .pill.green { background: #e6f6e6; color: #0a7d0a; }
+  .pill.gray { background: #f0efec; color: var(--ink-secondary); }
+
+  .diagram-box { border: 1px solid var(--border); border-radius: 3mm; padding: 4mm; background: #ffffff; text-align: center; }
+  .diagram-box img { max-width: 100%; max-height: 140mm; width: auto; height: auto; display: block; margin: 0 auto; }
+  .diagram-caption { font-size: 8.5pt; color: var(--ink-muted); margin-top: 2mm; text-align: center; }
+
+  .principle {
+    display: flex;
+    gap: 4mm;
+    margin-bottom: 4mm;
+    align-items: flex-start;
+  }
+  .principle .num {
+    flex: none;
+    width: 8mm; height: 8mm;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 9pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .principle .text strong { display: block; font-size: 10pt; margin-bottom: 0.5mm; }
+  .principle .text p { margin: 0; font-size: 9.3pt; }
+
+  .screenshot { border: 1px solid var(--border); border-radius: 3mm; overflow: hidden; margin: 3mm 0; }
+  .screenshot img { width: 100%; display: block; }
+  .screenshot-caption { font-size: 8.5pt; color: var(--ink-muted); margin: -1mm 0 4mm 0; }
+
+  .note {
+    border-left: 3px solid var(--accent);
+    background: #f3f7fc;
+    padding: 3mm 4mm;
+    font-size: 9.2pt;
+    color: var(--ink-secondary);
+    border-radius: 0 2mm 2mm 0;
+    margin: 3mm 0;
+  }
+  .note strong { color: var(--accent-dark); }
+
+  .flow-steps { display: flex; flex-direction: column; gap: 2mm; margin: 3mm 0 5mm; }
+  .flow-step { display: flex; align-items: center; gap: 4mm; border: 1px solid var(--border); border-radius: 2mm; padding: 2.5mm 4mm; font-size: 9.3pt; }
+  .flow-step .step-index { font-weight: 700; color: var(--accent); width: 6mm; }
+  .flow-step .step-name { font-weight: 600; width: 42mm; flex: none; }
+  .flow-step .step-desc { color: var(--ink-secondary); }
+
+  .toc-item { display: flex; justify-content: space-between; border-bottom: 1px dotted var(--border); padding: 2.5mm 0; font-size: 10.5pt; }
+  .toc-item .n { color: var(--ink-muted); }
+
+  .code-panel { border-radius: 3mm; overflow: hidden; border: 1px solid #000; margin: 3mm 0; }
+  .code-panel-header {
+    background: #1e1f1c;
+    color: #b8b6ae;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 8.3pt;
+    padding: 2.2mm 4mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #000;
+  }
+  .code-panel-header .dots { display:flex; gap: 1.3mm; }
+  .code-panel-header .dots span { width: 2.4mm; height: 2.4mm; border-radius: 50%; display:inline-block; }
+  .code-panel-header .dots span:nth-child(1) { background:#ff5f56; }
+  .code-panel-header .dots span:nth-child(2) { background:#ffbd2e; }
+  .code-panel-header .dots span:nth-child(3) { background:#27c93f; }
+  .codehl { margin: 0; padding: 3.5mm 4mm; font-size: 8pt; }
+  .codehl pre { margin: 0; font-family: ui-monospace, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
+  .codehl .linenos { color: #6b6a63; margin-right: 3.5mm; user-select: none; }
+
+  pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehl .hll { background-color: #49483e }
+.codehl { background: #272822; color: #F8F8F2 }
+.codehl .c { color: #959077 } /* Comment */
+.codehl .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.codehl .esc { color: #F8F8F2 } /* Escape */
+.codehl .g { color: #F8F8F2 } /* Generic */
+.codehl .k { color: #66D9EF } /* Keyword */
+.codehl .l { color: #AE81FF } /* Literal */
+.codehl .n { color: #F8F8F2 } /* Name */
+.codehl .o { color: #FF4689 } /* Operator */
+.codehl .x { color: #F8F8F2 } /* Other */
+.codehl .p { color: #F8F8F2 } /* Punctuation */
+.codehl .ch { color: #959077 } /* Comment.Hashbang */
+.codehl .cm { color: #959077 } /* Comment.Multiline */
+.codehl .cp { color: #959077 } /* Comment.Preproc */
+.codehl .cpf { color: #959077 } /* Comment.PreprocFile */
+.codehl .c1 { color: #959077 } /* Comment.Single */
+.codehl .cs { color: #959077 } /* Comment.Special */
+.codehl .gd { color: #FF4689 } /* Generic.Deleted */
+.codehl .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.codehl .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehl .gr { color: #F8F8F2 } /* Generic.Error */
+.codehl .gh { color: #F8F8F2 } /* Generic.Heading */
+.codehl .gi { color: #A6E22E } /* Generic.Inserted */
+.codehl .go { color: #66D9EF } /* Generic.Output */
+.codehl .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.codehl .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.codehl .gu { color: #959077 } /* Generic.Subheading */
+.codehl .gt { color: #F8F8F2 } /* Generic.Traceback */
+.codehl .kc { color: #66D9EF } /* Keyword.Constant */
+.codehl .kd { color: #66D9EF } /* Keyword.Declaration */
+.codehl .kn { color: #FF4689 } /* Keyword.Namespace */
+.codehl .kp { color: #66D9EF } /* Keyword.Pseudo */
+.codehl .kr { color: #66D9EF } /* Keyword.Reserved */
+.codehl .kt { color: #66D9EF } /* Keyword.Type */
+.codehl .ld { color: #E6DB74 } /* Literal.Date */
+.codehl .m { color: #AE81FF } /* Literal.Number */
+.codehl .s { color: #E6DB74 } /* Literal.String */
+.codehl .na { color: #A6E22E } /* Name.Attribute */
+.codehl .nb { color: #F8F8F2 } /* Name.Builtin */
+.codehl .nc { color: #A6E22E } /* Name.Class */
+.codehl .no { color: #66D9EF } /* Name.Constant */
+.codehl .nd { color: #A6E22E } /* Name.Decorator */
+.codehl .ni { color: #F8F8F2 } /* Name.Entity */
+.codehl .ne { color: #A6E22E } /* Name.Exception */
+.codehl .nf { color: #A6E22E } /* Name.Function */
+.codehl .nl { color: #F8F8F2 } /* Name.Label */
+.codehl .nn { color: #F8F8F2 } /* Name.Namespace */
+.codehl .nx { color: #A6E22E } /* Name.Other */
+.codehl .py { color: #F8F8F2 } /* Name.Property */
+.codehl .nt { color: #FF4689 } /* Name.Tag */
+.codehl .nv { color: #F8F8F2 } /* Name.Variable */
+.codehl .ow { color: #FF4689 } /* Operator.Word */
+.codehl .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.codehl .w { color: #F8F8F2 } /* Text.Whitespace */
+.codehl .mb { color: #AE81FF } /* Literal.Number.Bin */
+.codehl .mf { color: #AE81FF } /* Literal.Number.Float */
+.codehl .mh { color: #AE81FF } /* Literal.Number.Hex */
+.codehl .mi { color: #AE81FF } /* Literal.Number.Integer */
+.codehl .mo { color: #AE81FF } /* Literal.Number.Oct */
+.codehl .sa { color: #E6DB74 } /* Literal.String.Affix */
+.codehl .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.codehl .sc { color: #E6DB74 } /* Literal.String.Char */
+.codehl .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.codehl .sd { color: #E6DB74 } /* Literal.String.Doc */
+.codehl .s2 { color: #E6DB74 } /* Literal.String.Double */
+.codehl .se { color: #AE81FF } /* Literal.String.Escape */
+.codehl .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.codehl .si { color: #E6DB74 } /* Literal.String.Interpol */
+.codehl .sx { color: #E6DB74 } /* Literal.String.Other */
+.codehl .sr { color: #E6DB74 } /* Literal.String.Regex */
+.codehl .s1 { color: #E6DB74 } /* Literal.String.Single */
+.codehl .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.codehl .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.codehl .fm { color: #A6E22E } /* Name.Function.Magic */
+.codehl .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.codehl .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.codehl .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.codehl .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.codehl .il { color: #AE81FF } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+
+<!-- ============ COVER PAGE ============ -->
+<section class="page cover">
+  <div>
+    <div class="eyebrow">Project Report</div>
+    <div class="title">Loom</div>
+    <div class="subtitle">A structured feedback-intelligence platform that turns raw customer
+      feedback into validated classification, deterministic analytics, and a grounded
+      executive summary.</div>
+    <div class="tags">
+      <span class="tag">FastAPI</span>
+      <span class="tag">React + TypeScript</span>
+      <span class="tag">Pydantic</span>
+      <span class="tag">Structured LLM Output</span>
+      <span class="tag">Recharts</span>
+    </div>
+  </div>
+  <div class="meta">
+    <div class="meta-block">
+      <div class="label">Prepared by</div>
+      <div class="value">Atharv Muchandi</div>
+    </div>
+    <div class="meta-block">
+      <div class="label">Date</div>
+      <div class="value">July 2026</div>
+    </div>
+    <div class="meta-block">
+      <div class="label">Document</div>
+      <div class="value">Architecture &amp; Design Overview</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<section class="page">
+  <h2>Contents</h2>
+  <div class="toc-item"><span>1. Executive Overview</span><span class="n">03</span></div>
+  <div class="toc-item"><span>2. Problem Statement &amp; Goals</span><span class="n">03</span></div>
+  <div class="toc-item"><span>3. System Architecture</span><span class="n">04</span></div>
+  <div class="toc-item"><span>4. Processing Pipeline</span><span class="n">05</span></div>
+  <div class="toc-item"><span>5. Data Model</span><span class="n">06</span></div>
+  <div class="toc-item"><span>6. Classification Taxonomy</span><span class="n">07</span></div>
+  <div class="toc-item"><span>7. Core Engineering Principles</span><span class="n">08</span></div>
+  <div class="toc-item"><span>8. Reliability &amp; Error Handling</span><span class="n">09</span></div>
+  <div class="toc-item"><span>9. Technology Stack</span><span class="n">10</span></div>
+  <div class="toc-item"><span>10. Dashboard Walkthrough</span><span class="n">11</span></div>
+  <div class="toc-item"><span>11. Future Roadmap</span><span class="n">14</span></div>
+  <div class="toc-item"><span>12. Schema Code</span><span class="n">15</span></div>
+
+  <h3 style="margin-top:12mm;">Summary at a glance</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="margin-top:0;">What it does</h3>
+      <p>Accepts a CSV of raw customer feedback and returns, in a single call: validated
+      per-ticket classification, sentiment and urgency scoring, theme surfacing, aggregate
+      analytics, and a grounded narrative summary — rendered on an interactive dashboard.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">Why it's designed this way</h3>
+      <p>Every number a stakeholder sees is computed in deterministic Python, never by a
+      language model. The model is used only where genuine language understanding is
+      required — classification and narration — and every model response is schema-validated
+      before it reaches analytics.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXECUTIVE OVERVIEW ============ -->
+<section class="page">
+  <div class="section-label">01 · Executive Overview</div>
+  <h2>What Loom Is</h2>
+  <p>Loom converts raw, unstructured customer feedback into structured, business-ready
+  insight. A single CSV upload — support tickets, survey responses, app store reviews —
+  is validated, cleaned, classified against a fixed taxonomy, aggregated into KPIs, and
+  summarized into a prioritized narrative, all in one request.</p>
+
+  <p>The system is built around one architectural decision that shapes everything else:
+  <strong>language understanding and numeric computation are strictly separated.</strong>
+  A language model classifies each ticket and phrases the final summary; every count,
+  percentage, and distribution behind it is computed by ordinary, testable Python code.
+  This keeps the numbers a stakeholder relies on fully deterministic and auditable,
+  regardless of anything the model does.</p>
+
+  <div class="section-label" style="margin-top:8mm;">02 · Problem Statement &amp; Goals</div>
+  <h2>The Problem</h2>
+  <p>Feedback arrives unstructured, at volume, and inconsistently worded. Manually reading
+  and triaging hundreds of tickets is slow, and naive "ask an LLM to summarize this" approaches
+  produce numbers that shift between runs and can't be trusted for reporting.</p>
+
+  <h3>Design goals</h3>
+  <div class="grid-2">
+    <div class="card">
+      <strong style="color:var(--ink); font-size:10pt;">Consistency</strong>
+      <p style="margin-top:1mm;">The same ticket must classify the same way every time —
+      closed vocabularies, temperature 0, no free-text drift.</p>
+    </div>
+    <div class="card">
+      <strong style="color:var(--ink); font-size:10pt;">Trustworthy numbers</strong>
+      <p style="margin-top:1mm;">Every statistic on the dashboard is computed in Python from
+      validated data — never generated, estimated, or phrased by a model.</p>
+    </div>
+    <div class="card">
+      <strong style="color:var(--ink); font-size:10pt;">Resilience</strong>
+      <p style="margin-top:1mm;">One malformed row, timeout, or bad model response must never
+      fail the batch — every ticket resolves to a valid result.</p>
+    </div>
+    <div class="card">
+      <strong style="color:var(--ink); font-size:10pt;">Data minimization</strong>
+      <p style="margin-top:1mm;">Personally identifying data is redacted before any text
+      reaches a third-party model — by default, not as an opt-in.</p>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>03</span></div>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section class="page">
+  <div class="section-label">03 · System Architecture</div>
+  <h2>End-to-End Architecture</h2>
+  <p>The frontend never talks to the model directly, and the backend runs the entire
+  pipeline inside a single stateless request — there is no session state, upload ID, or
+  background job to track. The diagram below shows the full path from an uploaded CSV to
+  a rendered dashboard.</p>
+
+  <div class="diagram-box">
+    <img src="assets/architecture.svg" alt="System architecture diagram" />
+  </div>
+  <div class="diagram-caption">Figure 1 — Request flow from upload to rendered dashboard. Dotted
+  lines denote the two points where a language model is invoked; every other edge is
+  deterministic Python.</div>
+
+  <h3>Why a single stateless call</h3>
+  <p>With no database, a multi-step flow (upload → analyze → poll for a dashboard) would
+  require holding uploaded data in server memory between requests, keyed by a session ID —
+  fragile state that vanishes on restart and doesn't survive a second worker process. A
+  single call matches the no-persistence design honestly, and the frontend holds the
+  complete result in memory for the rest of the session.</p>
+
+  <div class="note"><strong>Where the model is actually used —</strong> exactly two points
+  in the entire pipeline: classifying a single ticket into the fixed taxonomy, and narrating
+  a pre-computed statistics object into readable prose. Nowhere does the model count, sum,
+  or calculate a percentage.</div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>04</span></div>
+</section>
+
+<!-- ============ PIPELINE ============ -->
+<section class="page">
+  <div class="section-label">04 · Processing Pipeline</div>
+  <h2>Six-Stage Processing Pipeline</h2>
+  <p>Every uploaded row moves through the same ordered pipeline. Rows that fail validation
+  are skipped and counted — they never reach classification and never enter analytics.</p>
+
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-index">1</span><span class="step-name">Validation</span><span class="step-desc">Reject invalid uploads (missing column, empty file); skip empty/null rows without failing the run.</span></div>
+    <div class="flow-step"><span class="step-index">2</span><span class="step-name">Normalization</span><span class="step-desc">Strip HTML and decode entities, clean markdown, normalize unicode and whitespace.</span></div>
+    <div class="flow-step"><span class="step-index">3</span><span class="step-name">PII Redaction</span><span class="step-desc">Regex-based redaction of emails, phone numbers, card numbers, and IDs — before any text reaches the model.</span></div>
+    <div class="flow-step"><span class="step-index">4</span><span class="step-name">Long-Ticket Routing</span><span class="step-desc">Tickets over 300 words are summarized (preserving every distinct issue) before classification.</span></div>
+    <div class="flow-step"><span class="step-index">5</span><span class="step-name">Batch Classification</span><span class="step-desc">One structured-output call per ticket at temperature 0, bounded concurrency, independent failure per ticket.</span></div>
+    <div class="flow-step"><span class="step-index">6</span><span class="step-name">Analytics &amp; Summary</span><span class="step-desc">Pure-Python aggregation, then one call to narrate the computed metrics into an executive summary.</span></div>
+  </div>
+
+  <h3>Multi-issue detection</h3>
+  <p>A single ticket can raise more than one issue — handled in the <em>same</em> classification
+  call, never an extra one. The model identifies every distinct issue, picks one as primary
+  (which carries full enrichment: category, theme, sentiment, urgency, actionable), and returns
+  the rest as secondary issues carrying category, theme, and urgency. Headline analytics
+  aggregate on the primary issue only, so a ticket is never double-counted.</p>
+
+  <h3>Long-ticket summarization guardrail</h3>
+  <p>The one place a secondary issue could silently disappear is summarization — so the
+  summarization prompt is explicitly constrained to preserve every distinct problem,
+  request, and complaint rather than compressing to a single topic.</p>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>05</span></div>
+</section>
+
+<!-- ============ DATA MODEL ============ -->
+<section class="page">
+  <div class="section-label">05 · Data Model</div>
+  <h2>Data Model</h2>
+  <p>Loom's first release is intentionally stateless — no database, no session state, so a
+  single request is the entire lifecycle. What follows is the <strong>logical data model</strong>:
+  the structured schema enforced by validation on every object the system produces, shown in
+  entity-relationship form.</p>
+
+  <div class="diagram-box">
+    <img src="assets/datamodel.svg" alt="Entity-relationship diagram of the Loom data model" style="max-height: 115mm;" />
+  </div>
+  <div class="diagram-caption">Figure 2 — Logical schema: a feedback ticket is classified
+  against exactly one category and theme, may carry secondary issues, and rolls up into the
+  analytics aggregate. Every field is a closed enum or a validated primitive — never free text.</div>
+
+  <div class="note"><strong>On persistence —</strong> this schema is enforced entirely in
+  memory for the current release; nothing is written to disk. Multi-period trend analysis
+  is a scoped, documented future extension (Section 11) that adds a persistence layer over
+  this exact schema without reworking the classification pipeline — the taxonomy is already
+  a stable identifier vocabulary, so it drops in cleanly.</div>
+
+  <h3>Why enums instead of free text</h3>
+  <p>Every category, theme, sentiment, and urgency value is a closed set defined once and
+  imported everywhere — prompts, validation, and analytics all derive from the same
+  definition. An invented or mis-cased value fails validation rather than silently entering
+  a chart, which is what makes the resulting statistics trustworthy.</p>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>06</span></div>
+</section>
+
+<!-- ============ TAXONOMY ============ -->
+<section class="page">
+  <div class="section-label">06 · Classification Taxonomy</div>
+  <h2>Classification Taxonomy</h2>
+  <p>Eight fixed top-level categories, each owning its own closed list of themes — a theme
+  is only ever valid under its parent category, enforced by a two-tier selection (category,
+  then theme from that category's list only).</p>
+
+  <table>
+    <tr><th>Category</th><th>Scope</th><th>Example Themes</th></tr>
+    <tr><td><strong>Billing &amp; Payments</strong></td><td>Charges, refunds, failed/duplicate payments, subscriptions</td><td>Failed Payment, Duplicate Charge, Refund Delay</td></tr>
+    <tr><td><strong>Account &amp; Access</strong></td><td>Login, passwords, OTP/2FA, lockouts</td><td>Login Failure, Password Reset, Account Locked</td></tr>
+    <tr><td><strong>Performance &amp; Reliability</strong></td><td>The app fails to run properly</td><td>App Crash, Slow Performance, Downtime/Outage</td></tr>
+    <tr><td><strong>Functional Issues</strong></td><td>The app runs, but behaves wrong</td><td>Function Not Working, Incorrect Data Displayed</td></tr>
+    <tr><td><strong>Feature Requests &amp; Enhancements</strong></td><td>Requests for new or improved capability</td><td>New Feature Request, Integration Request</td></tr>
+    <tr><td><strong>Usability &amp; User Experience</strong></td><td>Works, but confusing — or genuinely praised</td><td>Confusing Navigation, Positive Experience</td></tr>
+    <tr><td><strong>Support Experience</strong></td><td>Feedback about the support process itself</td><td>Slow Response, Unhelpful Agent</td></tr>
+    <tr><td><strong>Other</strong></td><td>Uncategorized, unclear, or general feedback</td><td>General Feedback, Unclear</td></tr>
+  </table>
+
+  <div class="note"><strong>The pair most prone to confusion —</strong> Performance &amp;
+  Reliability means the app fails to <em>run</em> properly (slow, crashing, down).
+  Functional Issues means the app runs but does the <em>wrong thing</em> (a feature
+  misbehaves, data is incorrect). This boundary is kept explicit in the classification
+  prompt because it's the one real triage teams get wrong most often too.</div>
+
+  <h3>Sentiment, urgency, and actionability</h3>
+  <table>
+    <tr><th>Field</th><th>Values</th><th>Definition</th></tr>
+    <tr><td><strong>Sentiment</strong></td><td>Positive · Neutral · Negative</td><td>Dominant overall sentiment — no "Mixed" value, no continuous score.</td></tr>
+    <tr><td><strong>Urgency</strong></td><td>High · Medium · Low</td><td>Impact-based, not tone-based: a calm "I can't log in" is High; an angry complaint about button color is Low.</td></tr>
+    <tr><td><strong>Actionable</strong></td><td>true / false</td><td>Whether the ticket requires follow-up by product, engineering, support, or business.</td></tr>
+  </table>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>07</span></div>
+</section>
+
+<!-- ============ PRINCIPLES ============ -->
+<section class="page">
+  <div class="section-label">07 · Core Engineering Principles</div>
+  <h2>Core Engineering Principles</h2>
+  <p>These are the non-negotiable constraints the system is built against — every
+  implementation decision is checked against them.</p>
+
+  <div class="principle">
+    <div class="num">1</div>
+    <div class="text"><strong>The model classifies and phrases; Python computes everything numeric.</strong>
+    <p>The model never counts, sums, averages, or calculates a percentage. Every number in
+    analytics and in the executive summary is computed in Python.</p></div>
+  </div>
+  <div class="principle">
+    <div class="num">2</div>
+    <div class="text"><strong>Structured output only.</strong>
+    <p>Every model response is validated against a fixed schema before use — no free-text
+    parsing, no regex-scraping of model prose.</p></div>
+  </div>
+  <div class="principle">
+    <div class="num">3</div>
+    <div class="text"><strong>Closed vocabularies.</strong>
+    <p>Categories, themes, sentiment, and urgency are fixed enumerations. An invented or
+    wrong-cased value fails validation rather than silently entering a chart.</p></div>
+  </div>
+  <div class="principle">
+    <div class="num">4</div>
+    <div class="text"><strong>Determinism by construction.</strong>
+    <p>Temperature 0, discrete outputs, and closed lists make the same input produce the
+    same output — without needing a cache to force consistency.</p></div>
+  </div>
+  <div class="principle">
+    <div class="num">5</div>
+    <div class="text"><strong>Validate before the model ever sees the data.</strong>
+    <p>Deterministic checks and PII redaction happen before a single token reaches the model.</p></div>
+  </div>
+  <div class="principle">
+    <div class="num">6</div>
+    <div class="text"><strong>Never crash the batch.</strong>
+    <p>Every ticket leaves classification with a valid result — success or a defined
+    fallback shape. One malformed row or one timeout never fails the run.</p></div>
+  </div>
+  <div class="principle">
+    <div class="num">7</div>
+    <div class="text"><strong>The dashboard never calls the model.</strong>
+    <p>Classification runs once during processing; the dashboard reads the already-structured
+    result only.</p></div>
+  </div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>08</span></div>
+</section>
+
+<!-- ============ RELIABILITY ============ -->
+<section class="page">
+  <div class="section-label">08 · Reliability &amp; Error Handling</div>
+  <h2>Validation &amp; Repair Contract</h2>
+  <p>Every classification response passes through a fixed, bounded recovery sequence —
+  <strong>repair at most once, never loop, always end in a valid object.</strong></p>
+
+  <div class="flow-steps">
+    <div class="flow-step"><span class="step-index">1</span><span class="step-name">Validate</span><span class="step-desc">Parse and validate against the schema. Closed enums mean an invented category fails here, not downstream.</span></div>
+    <div class="flow-step"><span class="step-index">2</span><span class="step-name">Coerce (free)</span><span class="step-desc">Strip code fences, trim, extract the outermost JSON object, re-validate — zero cost, zero extra latency.</span></div>
+    <div class="flow-step"><span class="step-index">3</span><span class="step-name">Re-prompt (one retry)</span><span class="step-desc">Retry the model exactly once with the validation error appended as a correction.</span></div>
+    <div class="flow-step"><span class="step-index">4</span><span class="step-name">Fallback</span><span class="step-desc">Emit a defined, valid fallback shape. Never a third attempt, never an exception to the caller.</span></div>
+  </div>
+
+  <p>Transient provider errors (rate limits, 5xx, timeouts) are retried separately with a
+  short backoff and don't count against the one validation re-prompt. Authentication errors
+  are never retried. Every unrecovered path — validation or provider — ends in the fallback
+  shape, never a crash, and out-of-scope input (non-English text, spam) routes there
+  gracefully too.</p>
+
+  <h3>Error codes</h3>
+  <table>
+    <tr><th>Code</th><th>Meaning</th></tr>
+    <tr><td><code>4001</code></td><td>Missing <code>feedback</code> column</td></tr>
+    <tr><td><code>4002</code></td><td>Empty or unparseable CSV</td></tr>
+    <tr><td><code>4003</code></td><td>No valid feedback rows found after row validation</td></tr>
+    <tr><td><code>4004</code></td><td>Invalid model response, post-repair</td></tr>
+    <tr><td><code>5001</code></td><td>Provider unavailable</td></tr>
+  </table>
+
+  <h3>Denominator discipline</h3>
+  <p>Skipped rows are reported separately and never enter a percentage. Every dashboard
+  percentage uses processed (valid) tickets as its denominator, with one deliberate exception:
+  Processing Success Rate, which divides by total uploaded rows — because its entire purpose
+  is measuring how many rows survived validation.</p>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>09</span></div>
+</section>
+
+<!-- ============ TECH STACK ============ -->
+<section class="page">
+  <div class="section-label">09 · Technology Stack</div>
+  <h2>Technology Stack</h2>
+
+  <h3>Backend</h3>
+  <table>
+    <tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+    <tr><td>API</td><td>FastAPI</td><td>Async request handling, automatic OpenAPI docs</td></tr>
+    <tr><td>Validation</td><td>Pydantic v2</td><td>Type-safe schema enforcement, closed enums, cross-field validators</td></tr>
+    <tr><td>Data handling</td><td>Pandas</td><td>CSV parsing and row-level processing</td></tr>
+    <tr><td>Classification</td><td>LLM structured output</td><td>Schema-constrained JSON generation at temperature 0</td></tr>
+    <tr><td>Config</td><td>python-dotenv</td><td>Environment-based configuration, no hardcoded secrets</td></tr>
+  </table>
+
+  <h3>Frontend</h3>
+  <table>
+    <tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+    <tr><td>Framework</td><td>React + TypeScript, Vite</td><td>Modular, type-safe UI with fast dev iteration</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS v4</td><td>CSS-variable design tokens, light/dark theming</td></tr>
+    <tr><td>Charts</td><td>Recharts</td><td>Declarative, accessible dashboard visualizations</td></tr>
+    <tr><td>UI primitives</td><td>Hand-built, shadcn-style</td><td>Owned component source — cva + Tailwind, no external UI runtime</td></tr>
+  </table>
+
+  <h3>Repository layout</h3>
+  <div class="grid-2">
+    <div class="card">
+      <strong style="font-size:10pt;">backend/</strong>
+      <p style="margin-top:1mm; font-size:9pt;"><code>api/</code> routes · <code>pipeline/</code>
+      validate, preprocess, classify, summarize · <code>analytics/</code> pure aggregation ·
+      <code>schemas/</code> taxonomy + models · <code>services/</code> model client · <code>prompts/</code></p>
+    </div>
+    <div class="card">
+      <strong style="font-size:10pt;">frontend/</strong>
+      <p style="margin-top:1mm; font-size:9pt;"><code>components/ui</code> primitives ·
+      <code>components/charts</code> · <code>hooks/</code> · <code>api/</code> client ·
+      <code>types/</code> mirroring backend schemas · <code>pages/</code> dashboard</p>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>10</span></div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section class="page">
+  <div class="section-label">10 · Dashboard Walkthrough</div>
+  <h2>Dashboard Walkthrough</h2>
+  <p>A single upload screen leads to a full dashboard: KPI cards, category/theme/sentiment/urgency
+  charts, the grounded executive summary, and a searchable, filterable feedback explorer —
+  all rendered client-side from the one API response, with no further calls to the backend.</p>
+
+  <div class="screenshot"><img src="assets/screenshot-upload.png" alt="Upload screen" /></div>
+  <div class="screenshot-caption">Figure 3 — Upload screen. Accepts a CSV via drag-and-drop or file picker; requires only a <code>feedback</code> column.</div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>11</span></div>
+</section>
+
+<section class="page">
+  <div class="section-label">10 · Dashboard Walkthrough (continued)</div>
+  <h2>KPIs, Executive Summary &amp; Category Charts</h2>
+  <p>The KPI row, grounded executive summary, category distribution, and top recurring themes
+  for a sample batch — each color assigned by a fixed identity order, never repainted by a filter.</p>
+
+  <div class="screenshot"><img src="assets/screenshot-dashboard-top.png" alt="Dashboard KPIs, executive summary, and category/theme charts" /></div>
+  <div class="screenshot-caption">Figure 4 — KPI row, grounded executive summary, category distribution, and top recurring themes for a sample batch.</div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>12</span></div>
+</section>
+
+<section class="page">
+  <div class="section-label">10 · Dashboard Walkthrough (continued)</div>
+  <h2>Sentiment, Urgency &amp; the Feedback Explorer</h2>
+  <p>Sentiment and urgency are rendered with the reserved status palette (not an arbitrary
+  chart color) since both are literal status fields. The feedback explorer below them supports
+  full-text search plus category, sentiment, urgency, and actionable-only filtering, with
+  secondary issues surfaced as inline badges.</p>
+
+  <div class="screenshot"><img src="assets/screenshot-dashboard-explorer.png" alt="Sentiment and urgency charts, and the feedback explorer" /></div>
+  <div class="screenshot-caption">Figure 5 — Sentiment distribution, urgency breakdown, and the feedback explorer with
+  live search/filter controls. Ticket 5 shows a secondary "Slow Response" issue surfaced alongside its primary category.</div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>13</span></div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section class="page">
+  <div class="section-label">11 · Future Roadmap</div>
+  <h2>Deferred, Not Forgotten</h2>
+  <p>Each of the following is a documented, scoped extension that does not require
+  reworking the classification pipeline — deliberately deferred to keep the first release
+  simple, not overlooked.</p>
+
+  <table>
+    <tr><th>Capability</th><th>Trigger to build</th></tr>
+    <tr><td><strong>Persistence &amp; multi-period trends</strong></td><td>Add SQLite once week-over-week deltas and new-theme detection are needed — the fixed taxonomy is already a stable ID vocabulary, so this drops in without touching the pipeline.</td></tr>
+    <tr><td><strong>Duplicate-result caching</strong></td><td>Arrives naturally once persistence exists (storage acts as cache); build sooner only if repeated re-processing becomes costly.</td></tr>
+    <tr><td><strong>Non-English support</strong></td><td>Currently routed gracefully to Other/Unclear; add language detection + translation once the dataset warrants it.</td></tr>
+    <tr><td><strong>Spam / junk filtering</strong></td><td>Add a pre-classification gate once real feedback streams introduce meaningful noise.</td></tr>
+    <tr><td><strong>Emergent-theme detection</strong></td><td>Monitor the "Other" rate as the signal; the automated version is embedding-based clustering.</td></tr>
+    <tr><td><strong>Human review workflow</strong></td><td>Build once a confidence signal exists to route low-confidence classifications for review.</td></tr>
+  </table>
+
+  <div class="note"><strong>Closing note —</strong> the guiding discipline throughout this
+  project was to build exactly what the current scope needs, and document every deferred
+  capability as a clean extension point rather than either over-building speculatively or
+  leaving the door closed on it.</div>
+
+  <div class="page-footer"><span>Loom — Project Report</span><span>14</span></div>
+</section>
+
+<!-- ============ SCHEMA CODE ============ -->
+<section class="page">
+  <div class="section-label">12 &middot; Schema Code</div>
+  <h2>Ticket &amp; Issue Models</h2>
+  <p>The Pydantic implementation behind the data model in Section 5 &mdash; the exact validators
+  that enforce theme&ndash;category ownership and produce the fallback shape on unrecoverable
+  failures. Docstrings and inline comments are omitted here for a clean listing; the complete,
+  commented source ships alongside this report.</p>
+
+  <div class="code-panel">
+    <div class="code-panel-header">
+      <span>schemas/ticket.py</span>
+      <span class="dots"><span></span><span></span><span></span></span>
+    </div>
+    <div class="codehl"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span><span class="w"> </span><span class="nc">AdditionalIssue</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="linenos"> 2</span>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>    <span class="n">category</span><span class="p">:</span> <span class="n">Category</span>
+<span class="linenos"> 5</span>    <span class="n">theme</span><span class="p">:</span> <span class="n">Theme</span>
+<span class="linenos"> 6</span>    <span class="n">urgency</span><span class="p">:</span> <span class="n">Urgency</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span>    <span class="k">def</span><span class="w"> </span><span class="nf">theme_belongs_to_category</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AdditionalIssue&quot;</span><span class="p">:</span>
+<span class="linenos">10</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">theme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CATEGORY_THEMES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">]:</span>
+<span class="linenos">11</span>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<span class="linenos">12</span>                <span class="sa">f</span><span class="s2">&quot;theme &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">theme</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; does not belong to category &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+<span class="linenos">13</span>            <span class="p">)</span>
+<span class="linenos">14</span>        <span class="k">return</span> <span class="bp">self</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="k">class</span><span class="w"> </span><span class="nc">LLMClassification</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="linenos">18</span>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="n">primary_category</span><span class="p">:</span> <span class="n">Category</span>
+<span class="linenos">21</span>    <span class="n">primary_theme</span><span class="p">:</span> <span class="n">Theme</span>
+<span class="linenos">22</span>    <span class="n">sentiment</span><span class="p">:</span> <span class="n">Sentiment</span>
+<span class="linenos">23</span>    <span class="n">urgency</span><span class="p">:</span> <span class="n">Urgency</span>
+<span class="linenos">24</span>    <span class="n">actionable</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="linenos">25</span>    <span class="n">additional_issues</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AdditionalIssue</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<span class="linenos">28</span>    <span class="k">def</span><span class="w"> </span><span class="nf">primary_theme_belongs_to_category</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LLMClassification&quot;</span><span class="p">:</span>
+<span class="linenos">29</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_theme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CATEGORY_THEMES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">primary_category</span><span class="p">]:</span>
+<span class="linenos">30</span>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<span class="linenos">31</span>                <span class="sa">f</span><span class="s2">&quot;primary_theme &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">primary_theme</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; does not belong to &quot;</span>
+<span class="linenos">32</span>                <span class="sa">f</span><span class="s2">&quot;primary_category &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">primary_category</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+<span class="linenos">33</span>            <span class="p">)</span>
+<span class="linenos">34</span>        <span class="k">return</span> <span class="bp">self</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="k">class</span><span class="w"> </span><span class="nc">TicketClassification</span><span class="p">(</span><span class="n">LLMClassification</span><span class="p">):</span>
+<span class="linenos">38</span>    <span class="n">ticket_id</span><span class="p">:</span> <span class="nb">str</span>
+<span class="linenos">39</span>    <span class="n">feedback_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="k">def</span><span class="w"> </span><span class="nf">fallback_classification</span><span class="p">(</span><span class="n">ticket_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">feedback_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TicketClassification</span><span class="p">:</span>
+<span class="linenos">43</span>    <span class="k">return</span> <span class="n">TicketClassification</span><span class="p">(</span>
+<span class="linenos">44</span>        <span class="n">ticket_id</span><span class="o">=</span><span class="n">ticket_id</span><span class="p">,</span>
+<span class="linenos">45</span>        <span class="n">feedback_text</span><span class="o">=</span><span class="n">feedback_text</span><span class="p">,</span>
+<span class="linenos">46</span>        <span class="n">primary_category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">OTHER</span><span class="p">,</span>
+<span class="linenos">47</span>        <span class="n">primary_theme</span><span class="o">=</span><span class="n">Theme</span><span class="o">.</span><span class="n">UNCLEAR</span><span class="p">,</span>
+<span class="linenos">48</span>        <span class="n">sentiment</span><span class="o">=</span><span class="n">Sentiment</span><span class="o">.</span><span class="n">NEUTRAL</span><span class="p">,</span>
+<span class="linenos">49</span>        <span class="n">urgency</span><span class="o">=</span><span class="n">Urgency</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+<span class="linenos">50</span>        <span class="n">actionable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">51</span>        <span class="n">additional_issues</span><span class="o">=</span><span class="p">[],</span>
+<span class="linenos">52</span>    <span class="p">)</span>
+</pre></div>
+  </div>
+
+  <div class="page-footer"><span>Loom &mdash; Project Report</span><span>15</span></div>
+</section>
+
+<section class="page">
+  <div class="section-label">12 &middot; Schema Code (continued)</div>
+  <h2>Response &amp; Analytics Models</h2>
+  <p>The API response envelope returned by <code>POST /analyze</code> &mdash; the validation
+  report, the analytics aggregate, and the per-ticket items list, exactly as consumed by the
+  frontend&#39;s <code>types/api.ts</code>.</p>
+
+  <div class="code-panel">
+    <div class="code-panel-header">
+      <span>schemas/response.py</span>
+      <span class="dots"><span></span><span></span><span></span></span>
+    </div>
+    <div class="codehl"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span><span class="w"> </span><span class="nc">ValidationReport</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="linenos"> 2</span>    <span class="n">total_rows</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos"> 3</span>    <span class="n">processed</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos"> 4</span>    <span class="n">skipped</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos"> 5</span>    <span class="n">skip_reasons</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">class</span><span class="w"> </span><span class="nc">RankedCount</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="linenos"> 9</span>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="linenos">10</span>    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">class</span><span class="w"> </span><span class="nc">AnalyticsResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="linenos">14</span>    <span class="n">total_processed</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos">15</span>    <span class="n">total_skipped</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos">16</span>    <span class="n">category_distribution</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="linenos">17</span>    <span class="n">sentiment_distribution</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="linenos">18</span>    <span class="n">theme_frequency</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="linenos">19</span>    <span class="n">urgency_distribution</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="linenos">20</span>    <span class="n">urgency_distribution_with_additional</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="linenos">21</span>    <span class="n">actionable_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos">22</span>    <span class="n">top_categories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RankedCount</span><span class="p">]</span>
+<span class="linenos">23</span>    <span class="n">top_themes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RankedCount</span><span class="p">]</span>
+<span class="linenos">24</span>    <span class="n">processing_success_rate</span><span class="p">:</span> <span class="nb">float</span>
+<span class="linenos">25</span>    <span class="n">positive_pct</span><span class="p">:</span> <span class="nb">float</span>
+<span class="linenos">26</span>    <span class="n">neutral_pct</span><span class="p">:</span> <span class="nb">float</span>
+<span class="linenos">27</span>    <span class="n">negative_pct</span><span class="p">:</span> <span class="nb">float</span>
+<span class="linenos">28</span>    <span class="n">high_urgency_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="k">class</span><span class="w"> </span><span class="nc">AnalyzeResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="linenos">32</span>    <span class="n">validation_report</span><span class="p">:</span> <span class="n">ValidationReport</span>
+<span class="linenos">33</span>    <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TicketClassification</span><span class="p">]</span>
+<span class="linenos">34</span>    <span class="n">analytics</span><span class="p">:</span> <span class="n">AnalyticsResult</span>
+<span class="linenos">35</span>    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span>
+</pre></div>
+  </div>
+
+  <div class="note"><strong>Full source &mdash;</strong> the complete schema module, including the
+  canonical category/theme taxonomy enums, is provided as <code>schema.py</code> alongside this
+  report.</div>
+
+  <div class="page-footer"><span>Loom &mdash; Project Report</span><span>16</span></div>
+</section>
+
+</body>
+</html>

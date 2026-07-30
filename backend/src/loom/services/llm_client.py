@@ -1,10 +1,3 @@
-"""OpenAI client wrapper: structured-output calls, typed errors, and
-short-backoff retry for transient failures.
-
-This module owns all direct contact with the LLM provider. Nothing outside
-`pipeline/` and `services/` should import the OpenAI SDK directly.
-"""
-
 import asyncio
 import logging
 from functools import lru_cache

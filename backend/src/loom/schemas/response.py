@@ -42,3 +42,17 @@ class AnalyzeResponse(BaseModel):
     items: list[TicketClassification]
     analytics: AnalyticsResult
     summary: str
+
+
+class AnalysisRef(BaseModel):
+    analysis_id: str
+    created_at: str
+
+
+class RangeSummaryResponse(BaseModel):
+    start: str
+    end: str
+    analyses_included: list[AnalysisRef]
+    validation_report: ValidationReport
+    analytics: AnalyticsResult
+    summary: str
