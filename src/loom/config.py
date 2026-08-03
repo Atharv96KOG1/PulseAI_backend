@@ -1,9 +1,18 @@
+from pathlib import Path
+
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# src/loom/config.py -> src/loom -> src -> project root. Anchored to an
+# absolute path so `.env` is found regardless of the process's cwd —
+# `python cli.py` from src/loom/ works the same as `python -m loom.cli`
+# from the project root.
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_ENV_FILE = _PROJECT_ROOT / ".env"
+
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_file=_ENV_FILE, extra="ignore")
 
     LLM_MODEL: str = ""
     API_KEY: str = ""

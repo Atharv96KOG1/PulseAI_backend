@@ -1,24 +1,35 @@
-from loom.schemas.taxonomy import CATEGORY_SCOPE, CATEGORY_THEMES
+from loom.models.taxonomy import CATEGORY_SCOPE, CATEGORY_THEMES
 
 
-def _build_taxonomy_block() -> str:
-    lines = []
-    for category, themes in CATEGORY_THEMES.items():
-        theme_list = " · ".join(theme.value for theme in themes)
-        lines.append(f"- {category.value}: {CATEGORY_SCOPE[category]}\n  Themes: {theme_list}")
-    return "\n".join(lines)
+class ClassificationPrompt:
+    """Builds the system prompt the classification model reads before every ticket."""
+
+    @staticmethod
+    def _build_taxonomy_block() -> str:
+        lines = []
+        for category, themes in CATEGORY_THEMES.items():
+            theme_list = " · ".join(theme.value for theme in themes)
+            lines.append(f"- {category.value}: {CATEGORY_SCOPE[category]}\n  Themes: {theme_list}")
+        return "\n".join(lines)
+
+    SYSTEM_PROMPT = None  # set below, once, from _build_taxonomy_block()
+
+    @staticmethod
+    def build_reprompt_nudge(validation_error: str) -> str:
+        return (
+            f"\n\nYour previous output failed validation: {validation_error}. "
+            "Return ONLY valid JSON matching the schema."
+        )
 
 
-_TAXONOMY_BLOCK = _build_taxonomy_block()
-
-CLASSIFICATION_SYSTEM_PROMPT = f"""You are Loom's customer feedback classification engine.
+ClassificationPrompt.SYSTEM_PROMPT = f"""You are Loom's customer feedback classification engine.
 
 You will be given a single, cleaned, PII-redacted customer feedback ticket. Classify it
 using ONLY the fixed taxonomy below. Never invent a category or theme, and never use a
 theme that does not belong to the category you selected for it.
 
 CATEGORIES AND THEMES (closed vocabulary):
-{_TAXONOMY_BLOCK}
+{ClassificationPrompt._build_taxonomy_block()}
 
 CATEGORY BOUNDARIES (the pairs most often confused — read carefully):
 - "Performance & Reliability" means the app fails to run properly (slow, crashing, down).
@@ -94,10 +105,3 @@ additional issues. Do not refuse and do not raise an error.
 
 Return your answer using the provided JSON schema only. Do not include any prose,
 explanation, or markdown — only the structured fields."""
-
-
-def build_reprompt_nudge(validation_error: str) -> str:
-    return (
-        f"\n\nYour previous output failed validation: {validation_error}. "
-        "Return ONLY valid JSON matching the schema."
-    )

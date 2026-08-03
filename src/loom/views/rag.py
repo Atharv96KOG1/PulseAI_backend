@@ -1,11 +1,6 @@
-"""Pydantic models for the /query (RAG) endpoint."""
+"""Response models for the /query (RAG) endpoint."""
 
 from pydantic import BaseModel
-
-
-class QueryRequest(BaseModel):
-    analysis_id: str
-    question: str
 
 
 class RetrievedTicket(BaseModel):

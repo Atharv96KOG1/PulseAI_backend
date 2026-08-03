@@ -2,7 +2,9 @@
 long-ticket pre-classification summarization, and the grounded executive summary.
 """
 
-LONG_TICKET_SUMMARY_SYSTEM_PROMPT = """You summarize long customer feedback tickets so they can be
+
+class SummarizationPrompt:
+    LONG_TICKET_SYSTEM_PROMPT = """You summarize long customer feedback tickets so they can be
 classified more easily. This is NOT a single-topic abstract.
 
 Rules:
@@ -13,8 +15,7 @@ Rules:
 - Remove greetings, repetition, and filler language.
 - Output plain text only: no preamble, no markdown, no bullet points, no headers."""
 
-
-EXECUTIVE_SUMMARY_SYSTEM_PROMPT = """You write a prioritized executive summary of customer feedback
+    EXECUTIVE_SUMMARY_SYSTEM_PROMPT = """You write a prioritized executive summary of customer feedback
 trends for business stakeholders.
 
 You will be given precomputed statistics as JSON — distributions, top categories/themes,

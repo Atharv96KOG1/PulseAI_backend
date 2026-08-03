@@ -7,7 +7,7 @@ extends it with the backend-assigned `ticket_id` and is what the API returns.
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from loom.schemas.taxonomy import CATEGORY_THEMES, Category, Sentiment, Theme, Urgency
+from loom.models.taxonomy import CATEGORY_THEMES, Category, Sentiment, Theme, Urgency
 
 
 class AdditionalIssue(BaseModel):
@@ -78,35 +78,34 @@ class TicketClassification(LLMClassification):
     ticket_id: str
     feedback_text: str = ""
 
+    @classmethod
+    def fallback(cls, ticket_id: str, feedback_text: str = "") -> "TicketClassification":
+        """The valid fallback shape emitted when a ticket cannot be classified."""
+        return cls(
+            ticket_id=ticket_id,
+            feedback_text=feedback_text,
+            primary_category=Category.OTHER,
+            primary_theme=Theme.UNCLEAR,
+            sentiment=Sentiment.NEUTRAL,
+            sentiment_score=0.0,
+            urgency=Urgency.LOW,
+            actionable=False,
+            additional_issues=[],
+        )
 
-def fallback_classification(ticket_id: str, feedback_text: str = "") -> TicketClassification:
-    """The valid fallback shape emitted when a ticket cannot be classified."""
-    return TicketClassification(
-        ticket_id=ticket_id,
-        feedback_text=feedback_text,
-        primary_category=Category.OTHER,
-        primary_theme=Theme.UNCLEAR,
-        sentiment=Sentiment.NEUTRAL,
-        sentiment_score=0.0,
-        urgency=Urgency.LOW,
-        actionable=False,
-        additional_issues=[],
-    )
-
-
-def is_unclassifiable(item: TicketClassification) -> bool:
-    """True when `item` carries the fallback shape — either the model flagged the
-    ticket as out-of-scope (non-English/spam/unintelligible) or the repair contract
-    was exhausted after a real classification failure. Both cases carry no real
-    signal about the ticket, so callers exclude them from analytics/results.
-    """
-    reference = fallback_classification(item.ticket_id, item.feedback_text)
-    return (
-        item.primary_category == reference.primary_category
-        and item.primary_theme == reference.primary_theme
-        and item.sentiment == reference.sentiment
-        and item.sentiment_score == reference.sentiment_score
-        and item.urgency == reference.urgency
-        and item.actionable == reference.actionable
-        and item.additional_issues == reference.additional_issues
-    )
+    def is_unclassifiable(self) -> bool:
+        """True when this item carries the fallback shape — either the model flagged
+        the ticket as out-of-scope (non-English/spam/unintelligible) or the repair
+        contract was exhausted after a real classification failure. Both cases carry
+        no real signal about the ticket.
+        """
+        reference = TicketClassification.fallback(self.ticket_id, self.feedback_text)
+        return (
+            self.primary_category == reference.primary_category
+            and self.primary_theme == reference.primary_theme
+            and self.sentiment == reference.sentiment
+            and self.sentiment_score == reference.sentiment_score
+            and self.urgency == reference.urgency
+            and self.actionable == reference.actionable
+            and self.additional_issues == reference.additional_issues
+        )

@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel
 
-from loom.schemas.ticket import TicketClassification
+from loom.models.ticket import TicketClassification
 
 
 class ValidationReport(BaseModel):

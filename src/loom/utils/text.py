@@ -1,8 +1,9 @@
 """Shared, dependency-free text inspection helpers.
 
 Used by both validation (to flag warnings) and preprocessing (to decide
-whether cleanup is needed). Kept separate from preprocess.py so validate.py
-can inspect raw text without pulling in normalization/redaction logic.
+whether cleanup is needed). Kept separate from TextPreprocessingService so
+ValidationService can inspect raw text without pulling in normalization/
+redaction logic.
 """
 
 import re
@@ -15,13 +16,15 @@ _MARKDOWN_RE = re.compile(
 )
 
 
-def word_count(text: str) -> int:
-    return len(_WORD_RE.findall(text))
+class TextInspector:
+    @staticmethod
+    def word_count(text: str) -> int:
+        return len(_WORD_RE.findall(text))
 
+    @staticmethod
+    def contains_html(text: str) -> bool:
+        return bool(_HTML_TAG_RE.search(text))
 
-def contains_html(text: str) -> bool:
-    return bool(_HTML_TAG_RE.search(text))
-
-
-def contains_markdown(text: str) -> bool:
-    return bool(_MARKDOWN_RE.search(text))
+    @staticmethod
+    def contains_markdown(text: str) -> bool:
+        return bool(_MARKDOWN_RE.search(text))
