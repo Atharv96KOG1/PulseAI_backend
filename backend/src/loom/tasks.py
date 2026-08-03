@@ -1,8 +1,3 @@
-"""Background tasks scheduled via FastAPI's BackgroundTasks — work that runs
-after a response has already been sent back to the client, so the caller
-never waits on it.
-"""
-
 import logging
 
 from loom.rag.vector_store import save_ticket_embeddings
