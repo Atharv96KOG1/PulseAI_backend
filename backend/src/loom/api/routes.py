@@ -2,11 +2,12 @@ import io
 import logging
 
 import pandas as pd
-from fastapi import APIRouter, BackgroundTasks, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import Response
 
-from loom import config
 from loom.analytics.aggregate import compute_analytics, merge_analytics
+from loom.api.deps import get_analysis_record, get_settings
+from loom.config import Settings
 from loom.db import get_analysis, list_analyses, list_analyses_in_range, save_analysis
 from loom.pipeline.classify import classify_all
 from loom.pipeline.summarize import build_summary_facts, generate_executive_summary
@@ -32,11 +33,13 @@ router = APIRouter()
 
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze(
-    background_tasks: BackgroundTasks, file: UploadFile = File(...)  # noqa: B008 (FastAPI idiom)
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),  # noqa: B008 (FastAPI idiom)
+    settings: Settings = Depends(get_settings),
 ) -> AnalyzeResponse:
     content = await file.read()
 
-    if len(content) > config.MAX_UPLOAD_SIZE:
+    if len(content) > settings.MAX_UPLOAD_SIZE:
         raise HTTPException(
             status_code=413,
             detail={"code": ErrorCode.EMPTY_CSV, "message": "File exceeds maximum upload size"},
@@ -102,11 +105,7 @@ async def query(request: QueryRequest) -> QueryResponse:
 
 
 @router.get("/report/{analysis_id}")
-async def report(analysis_id: str) -> Response:
-    record = get_analysis(analysis_id)
-    if record is None:
-        raise HTTPException(status_code=404, detail="Analysis not found")
-
+async def report(analysis_id: str, record: dict = Depends(get_analysis_record)) -> Response:
     pdf_bytes = build_weekly_report_pdf(record)
     filename = f"loom-weekly-report-{analysis_id[:8]}.pdf"
     return Response(
@@ -122,11 +121,7 @@ async def history() -> list[dict]:
 
 
 @router.get("/history/{analysis_id}")
-async def history_detail(analysis_id: str) -> dict:
-    record = get_analysis(analysis_id)
-    if record is None:
-        raise HTTPException(status_code=404, detail="Analysis not found")
-
+async def history_detail(record: dict = Depends(get_analysis_record)) -> dict:
     for item in record["items"]:
         item["actionable"] = bool(item["actionable"])
 
